@@ -1,10 +1,13 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+const morgan = require('morgan');
+const url = require('url');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(morgan('dev')); // Configurar morgan para el registro de solicitudes
 
 const dbUrl = 'mysql://root:TwOIBzsmVjMtBdXDLdIHdCmZIznAByHh@monorail.proxy.rlwy.net:56504/railway';
 const dbConfig = url.parse(dbUrl);
@@ -34,6 +37,7 @@ app.post('/api/query', (req, res) => {
   });
 });
 
-app.listen(3001, () => {
-  console.log('Server running on port 3001');
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
