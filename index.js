@@ -6,11 +6,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const dbUrl = 'mysql://root:TwOIBzsmVjMtBdXDLdIHdCmZIznAByHh@monorail.proxy.rlwy.net:56504/railway';
+const dbConfig = url.parse(dbUrl);
+const [user, password] = dbConfig.auth.split(':');
+
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'yourusername',
-  password: 'yourpassword',
-  database: 'yourdatabase'
+  host: dbConfig.hostname,
+  user: user,
+  password: password,
+  database: dbConfig.pathname.slice(1) // remove leading '/'
 });
 
 db.connect((err) => {
