@@ -2,22 +2,21 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const morgan = require('morgan');
-const url = require('url');
+const { URL } = require('url'); // Usar la clase URL en lugar de url.parse
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev')); // Configurar morgan para el registro de solicitudes
 
-const dbUrl = 'mysql://root:TwOIBzsmVjMtBdXDLdIHdCmZIznAByHh@monorail.proxy.rlwy.net:56504/railway';
-const dbConfig = url.parse(dbUrl);
-const [user, password] = dbConfig.auth.split(':');
+const dbUrl = new URL('mysql://root:TwOIBzsmVjMtBdXDLdIHdCmZIznAByHh@monorail.proxy.rlwy.net:56504/railway');
 
 const db = mysql.createConnection({
-  host: dbConfig.hostname,
-  user: user,
-  password: password,
-  database: dbConfig.pathname.slice(1) // remove leading '/'
+  host: dbUrl.hostname,
+  user: dbUrl.username,
+  password: dbUrl.password,
+  port: dbUrl.port,
+  database: dbUrl.pathname.slice(1) // remove leading '/'
 });
 
 db.connect((err) => {
